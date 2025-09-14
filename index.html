@@ -8,7 +8,6 @@
     <meta name="keywords" content="AI development California, ML development California, artificial intelligence Mission Viejo, machine learning Orange County, AI engineers California, ML solutions California, AI tools development, machine learning consulting California">
     <meta name="author" content="Xperi AI">
     <meta name="robots" content="index, follow">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -103,51 +102,86 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    Advancing the Future with
-                    <span class="gradient-text"><strong>AI & Machine Learning</strong></span>
-                </h1>
-                <p class="hero-description">
-                    <strong>AI and ML</strong> are smart and available these days, but at the end you need a design for it and someone to do it for you. 
-                    That's why you can trust us and let us do it for you. Xperi AI develops cutting-edge <strong>artificial intelligence</strong> and 
-                    <strong>machine learning</strong> solutions with expert engineers and state-of-the-art <strong>AI tools</strong>. 
-                    We transform ideas into intelligent systems across California.
-                </p>
-                <div class="hero-buttons">
-                    <a href="#services" class="btn btn-primary">Our Services</a>
-                    <a href="#contact" class="btn btn-secondary">Get Started</a>
+        <div class="hero-slider">
+            <div class="slider-container">
+                <div class="slide active">
+                    <div class="slide-content">
+                        <div class="hero-text">
+                            <h1 class="hero-title">
+                                Advancing the Future with
+                                <span class="gradient-text"><strong>AI & Machine Learning</strong></span>
+                            </h1>
+                            <p class="hero-description">
+                                <strong>AI and ML</strong> are smart and available these days, but at the end you need a design for it and someone to do it for you. 
+                                That's why you can trust us and let us do it for you. Xperi AI develops cutting-edge <strong>artificial intelligence</strong> and 
+                                <strong>machine learning</strong> solutions with expert engineers and state-of-the-art <strong>AI tools</strong>. 
+                                We transform ideas into intelligent systems across California.
+                            </p>
+                            <div class="hero-buttons">
+                                <a href="#services" class="btn btn-primary">Our Services</a>
+                                <a href="#contact" class="btn btn-secondary">Get Started</a>
+                            </div>
+                        </div>
+                        <div class="slide-visual">
+                            <div class="ai-visualization">
+                                <div class="neural-network" id="neuralNetwork">
+                                    <div class="node node-1" data-node="1"></div>
+                                    <div class="node node-2" data-node="2"></div>
+                                    <div class="node node-3" data-node="3"></div>
+                                    <div class="node node-4" data-node="4"></div>
+                                    <div class="node node-5" data-node="5"></div>
+                                    <div class="node node-6" data-node="6"></div>
+                                    <div class="node node-7" data-node="7"></div>
+                                    <div class="node node-8" data-node="8"></div>
+                                    <div class="connection connection-1" data-connection="1"></div>
+                                    <div class="connection connection-2" data-connection="2"></div>
+                                    <div class="connection connection-3" data-connection="3"></div>
+                                    <div class="connection connection-4" data-connection="4"></div>
+                                    <div class="connection connection-5" data-connection="5"></div>
+                                    <div class="connection connection-6" data-connection="6"></div>
+                                    <div class="hover-reflection"></div>
+                                </div>
+                                <div class="tech-icons">
+                                    <i class="fas fa-microchip tech-icon"></i>
+                                    <i class="fas fa-database tech-icon"></i>
+                                    <i class="fas fa-code tech-icon"></i>
+                                    <i class="fas fa-chart-bar tech-icon"></i>
+                                    <i class="fas fa-cogs tech-icon"></i>
+                                    <i class="fas fa-network-wired tech-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slide">
+                    <div class="slide-image">
+                        <img src="hero-banner.svg" alt="XPERIA AI - The Future is Here" />
+                    </div>
+                </div>
+                
+                <div class="slide">
+                    <div class="slide-image">
+                        <img src="ml-banner.svg" alt="Make your first ML Model" />
+                    </div>
                 </div>
             </div>
-            <div class="hero-visual">
-                <div class="ai-visualization">
-                    <div class="neural-network" id="neuralNetwork">
-                        <div class="node node-1" data-node="1"></div>
-                        <div class="node node-2" data-node="2"></div>
-                        <div class="node node-3" data-node="3"></div>
-                        <div class="node node-4" data-node="4"></div>
-                        <div class="node node-5" data-node="5"></div>
-                        <div class="node node-6" data-node="6"></div>
-                        <div class="node node-7" data-node="7"></div>
-                        <div class="node node-8" data-node="8"></div>
-                        <div class="connection connection-1" data-connection="1"></div>
-                        <div class="connection connection-2" data-connection="2"></div>
-                        <div class="connection connection-3" data-connection="3"></div>
-                        <div class="connection connection-4" data-connection="4"></div>
-                        <div class="connection connection-5" data-connection="5"></div>
-                        <div class="connection connection-6" data-connection="6"></div>
-                        <div class="hover-reflection"></div>
-                    </div>
-                    <div class="tech-icons">
-                        <i class="fas fa-microchip tech-icon"></i>
-                        <i class="fas fa-database tech-icon"></i>
-                        <i class="fas fa-code tech-icon"></i>
-                        <i class="fas fa-chart-bar tech-icon"></i>
-                        <i class="fas fa-cogs tech-icon"></i>
-                        <i class="fas fa-network-wired tech-icon"></i>
-                    </div>
-                </div>
+            
+            <!-- Slider Navigation -->
+            <div class="slider-nav">
+                <button class="nav-btn prev-btn" onclick="changeSlide(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-btn next-btn" onclick="changeSlide(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <!-- Slider Dots -->
+            <div class="slider-dots">
+                <span class="dot active" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
             </div>
         </div>
     </section>

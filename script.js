@@ -467,6 +467,69 @@ function shouldActivateConnection(nodeNumber, connectionNumber) {
     return nodeConnections[nodeNumber] && nodeConnections[nodeNumber].includes(connectionNumber);
 }
 
+// Hero Slider Functionality
+let currentSlideIndex = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+const totalSlides = slides.length;
+
+function showSlide(index) {
+    // Remove active class from all slides and dots
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    // Add active class to current slide and dot
+    slides[index].classList.add('active');
+    dots[index].classList.add('active');
+    
+    currentSlideIndex = index;
+}
+
+function changeSlide(direction) {
+    let newIndex = currentSlideIndex + direction;
+    
+    if (newIndex >= totalSlides) {
+        newIndex = 0;
+    } else if (newIndex < 0) {
+        newIndex = totalSlides - 1;
+    }
+    
+    showSlide(newIndex);
+}
+
+function currentSlide(index) {
+    showSlide(index - 1);
+}
+
+// Auto-slide functionality
+let autoSlideInterval;
+
+function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+        changeSlide(1);
+    }, 5000); // Change slide every 5 seconds
+}
+
+function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+}
+
+// Initialize slider
+document.addEventListener('DOMContentLoaded', () => {
+    // Show first slide
+    showSlide(0);
+    
+    // Start auto-slide
+    startAutoSlide();
+    
+    // Pause auto-slide on hover
+    const slider = document.querySelector('.hero-slider');
+    if (slider) {
+        slider.addEventListener('mouseenter', stopAutoSlide);
+        slider.addEventListener('mouseleave', startAutoSlide);
+    }
+});
+
 // Add CSS for ripple animation
 const style = document.createElement('style');
 style.textContent = `
