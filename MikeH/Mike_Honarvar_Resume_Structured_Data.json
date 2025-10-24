@@ -1,0 +1,86 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Mike Honarvar",
+  "jobTitle": "Senior Mechanical R&D Engineer",
+  "email": "Mike.Honarvar32@gmail.com",
+  "telephone": "(657) 606-3300",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Irvine, CA"
+  },
+  "alumniOf": [
+    {
+      "@type": "EducationalOrganization",
+      "name": "Temple University"
+    },
+    {
+      "@type": "EducationalOrganization",
+      "name": "Shiraz University"
+    }
+  ],
+  "worksFor": [
+    {
+      "@type": "Organization",
+      "name": "Masimo"
+    },
+    {
+      "@type": "Organization",
+      "name": "Intelligent Optical Systems, Inc."
+    },
+    {
+      "@type": "Organization",
+      "name": "Intelligent Fiber Optic Systems"
+    },
+    {
+      "@type": "Organization",
+      "name": "Temple University"
+    }
+  ],
+  "knowsAbout": [
+    "Medical Device R&D",
+    "New Product Development",
+    "Process Validation",
+    "Design for Manufacturing",
+    "Design for Reliability and Manufacturing",
+    "Design for Six Sigma",
+    "Process Characterization",
+    "Test Method Validation",
+    "Statistical Process Control",
+    "Design Transfer Activities",
+    "Supplier Development",
+    "Supplier Validation",
+    "High-Volume Manufacturing",
+    "Plastics Processing",
+    "Electromechanical Assembly Design",
+    "Injection Molding",
+    "CNC Machining",
+    "ISO 13485",
+    "FDA 21 CFR 820.30",
+    "IEC 62304",
+    "IEC 60601-1",
+    "Design Controls",
+    "SolidWorks",
+    "COMSOL Multiphysics",
+    "FEA Analysis",
+    "Statistical Analysis",
+    "Project Management",
+    "Cross-Functional Leadership",
+    "Supplier Relationship Management",
+    "Six Sigma",
+    "DMAIC",
+    "DOE",
+    "Regression Analysis",
+    "ANOVA",
+    "Capability Analysis",
+    "GR&R"
+  ],
+  "hasCredential": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "degree",
+      "educationalLevel": "Doctorate",
+      "about": "Mechanical Engineering"
+    }
+  ]
+}

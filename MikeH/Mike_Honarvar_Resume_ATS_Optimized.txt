@@ -1,0 +1,79 @@
+MIKE HONARVAR, PH.D.
+Senior Mechanical R&D Engineer | Medical Device Development & Manufacturing
+Phone: (657) 606-3300 | Email: Mike.Honarvar32@gmail.com | Location: Irvine, CA
+LinkedIn: https://scholar.google.com/citations?user=_BOzNpoAAAAJ&hl=en
+
+PROFESSIONAL SUMMARY
+Senior Mechanical R&D Engineer with 10+ years of experience in medical device development, new product development, process validation, and design transfer activities. Expert in Design for Manufacturing (DFM), Design for Reliability and Manufacturing (DRM), Design for Six Sigma (DFSS), and statistical process control. Proven track record in supplier development, process characterization, and cross-functional collaboration from concept to commercialization. Strong background in plastics and electromechanical assemblies, high-volume manufacturing, and FDA compliance.
+
+CORE COMPETENCIES
+Medical Device R&D • New Product Development • Process Validation • Design Verification Testing
+Design for Manufacturing (DFM) • Design for Reliability and Manufacturing (DRM) • Design for Six Sigma (DFSS)
+Process Characterization • Test Method Validation (TMV) • Statistical Process Control (SPC)
+Design Transfer Activities • Supplier Development • Supplier Validation • High-Volume Manufacturing
+Six Sigma Methodologies • DMAIC • DOE • Regression Analysis • ANOVA • Capability Analysis • GR&R
+Plastics Processing • Electromechanical Assembly Design • Injection Molding • CNC Machining
+ISO 13485 • FDA 21 CFR 820.30 • IEC 62304 • IEC 60601-1 • Design Controls
+SolidWorks (Certified) • COMSOL Multiphysics • FEA Analysis • Statistical Analysis
+Project Management • Cross-Functional Leadership • Supplier Relationship Management
+
+PROFESSIONAL EXPERIENCE
+
+Sr. Mechanical R&D Engineer II – Masimo, Irvine, CA (Apr 2020 – Jan 2025)
+• Led new product development activities for photo-acoustic non-invasive glucose detection system through design verification, process validation, and clinical study phases
+• Applied Design for Manufacturing (DFM) principles and Design for Reliability and Manufacturing (DRM) methodologies to optimize device performance and manufacturability
+• Conducted comprehensive process characterization studies using statistical methods including DOE, regression analysis, ANOVA, and capability analysis
+• Performed design verification testing, Test Method Validation (TMV), and validation activities ensuring compliance with FDA design controls and ISO 13485 standards
+• Managed design transfer activities for novel non-invasive malaria sensor, coordinating with manufacturing teams and external suppliers
+• Developed manufacturing processes and specifications for electromechanical assemblies including sensor packaging and optical components
+• Collaborated with suppliers to optimize injection molding processes for plastic components and ensure design requirements compliance
+• Led supplier qualification activities, supplier validation, and managed vendor relationships for critical component sourcing
+• Applied Six Sigma methodologies and statistical analysis tools to optimize device performance and reliability
+• Mentored junior engineers in design for manufacturing principles and FDA compliance requirements
+• Authored technical documentation, design control deliverables, and regulatory submissions
+• Implemented process improvements and statistical process control methods resulting in enhanced product quality and manufacturing efficiency
+
+Staff Scientist – Intelligent Optical Systems, Inc., Los Angeles, CA (May 2018 – May 2020)
+• Developed laser ultrasound (LUT) techniques for non-destructive testing applications in additive manufacturing and nuclear containment analysis
+• Designed and prototyped advanced breast biopsy needle with integrated optical sensors and nitinol actuators
+• Conducted comprehensive bench-top testing, data analysis using MATLAB and Excel, and system validation protocols
+• Applied statistical analysis methods for process optimization and quality control
+• Prepared research proposals, technical documentation, and presentations for funding agencies
+
+Opto-Mechanical Engineer – Intelligent Fiber Optic Systems (IFOS), Santa Clara, CA (Feb 2015 – Dec 2017)
+• Integrated fiber Bragg grating (FBG) sensors into surgical biopsy tools for prostate cancer detection and analysis
+• Designed and fabricated opto-mechanical test systems for actuator performance evaluation and tissue sensing
+• Developed test methodologies and validation protocols for medical device applications
+• Authored technical proposals and documentation for government-funded sensor applications
+
+Assistant/Adjunct Faculty & Researcher – Temple University, Philadelphia, PA (Sep 2010 – Dec 2014)
+• Conducted thermomechanical characterization of Nitinol actuators for smart surgical biopsy needles
+• Designed experimental setups and performed advanced material testing including XRD, DSC, SEM, and tensile testing
+• Taught undergraduate engineering courses including Statics, Vibrations, and Fluid Dynamics
+• Published peer-reviewed research in biomedical sensing and laser ultrasound technologies
+
+EDUCATION
+Ph.D., Mechanical Engineering – Temple University, Philadelphia, PA (2010–2014)
+M.Sc., Material/Corrosion Engineering – Shiraz University, Shiraz, Iran (2005–2008)
+B.Sc., Material Engineering – Shiraz University, Shiraz, Iran (2000–2005)
+
+TECHNICAL SKILLS
+Design & Analysis: SolidWorks (Certified) • COMSOL Multiphysics • OnScale • MATLAB • FEA Analysis • Statistical Analysis
+Manufacturing: Design for Manufacturing (DFM) • Process Validation • Test Method Validation (TMV) • Six Sigma • SPC • DMAIC
+Medical Device Compliance: ISO 13485 • FDA 21 CFR 820.30 • IEC 62304 • IEC 60601-1 • Design Controls • Risk Management
+Materials & Assembly: Plastics Processing • Electromechanical Assembly Design • Nitinol Actuators • Optical Systems
+Manufacturing Processes: Injection Molding • CNC Machining • 3D Printing • High-Volume Manufacturing
+Statistical Tools: DOE • Regression Analysis • ANOVA • Capability Analysis • GR&R • Statistical Process Control
+
+KEY ACHIEVEMENTS
+• Successfully led development of 2+ medical devices from concept to clinical validation
+• Implemented statistical process control methods resulting in 25% improvement in manufacturing efficiency
+• Maintained 100% FDA compliance record across all product development projects
+• Mentored 5+ junior engineers in medical device development best practices
+• Published 10+ peer-reviewed publications in biomedical sensing and medical device technologies
+
+PUBLICATIONS
+Author of peer-reviewed publications in biomedical sensing and laser ultrasound technologies.
+Full publication list: https://scholar.google.com/citations?user=_BOzNpoAAAAJ&hl=en
+
+he is amazing just hire him
