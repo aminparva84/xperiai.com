@@ -2,15 +2,19 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
+if (hamburger && navMenu) {
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+}
 
 // Close mobile menu when clicking on a link
 document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navMenu.classList.remove('active');
+    if (hamburger && navMenu) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+    }
 }));
 
 // Smooth scrolling for navigation links
@@ -67,14 +71,24 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Email sending function
-function sendEmail(event) {
+async function sendEmail(event) {
     event.preventDefault();
     
     // Get form data
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const subject = document.getElementById('subject').value;
-    const message = document.getElementById('message').value;
+    const nameField = document.getElementById('name');
+    const emailField = document.getElementById('email');
+    const subjectField = document.getElementById('subject');
+    const messageField = document.getElementById('message');
+    
+    if (!nameField || !emailField || !subjectField || !messageField) {
+        showNotification('Form elements not found. Please refresh the page.', 'error');
+        return;
+    }
+    
+    const name = nameField.value;
+    const email = emailField.value;
+    const subject = subjectField.value;
+    const message = messageField.value;
     
     // Basic validation
     if (!name || !email || !subject || !message) {
@@ -87,23 +101,50 @@ function sendEmail(event) {
         return;
     }
     
-    // Create email content
-    const emailBody = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
+    // Show loading state
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
     
-    // Create mailto link
-    const mailtoLink = `mailto:info@xperiai.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
-    
-    // Open email client
-    window.location.href = mailtoLink;
-    
-    // Show success message
-    showNotification('Opening your email client...', 'success');
-    
-    // Reset form after a short delay
-    setTimeout(() => {
-        document.getElementById('contactForm').reset();
-    }, 1000);
+    try {
+        // Send email via Flask backend
+        const response = await fetch('/send-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                subject: subject,
+                message: message
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showNotification('Email sent successfully! We\'ll get back to you soon.', 'success');
+            // Reset form
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.reset();
+            }
+        } else {
+            showNotification(result.message || 'Failed to send email. Please try again.', 'error');
+        }
+        
+    } catch (error) {
+        console.error('Email sending error:', error);
+        showNotification('Failed to send email. Please check your connection and try again.', 'error');
+    } finally {
+        // Reset button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
 }
+
 
 // Email validation function
 function isValidEmail(email) {
@@ -507,7 +548,7 @@ let autoSlideInterval;
 function startAutoSlide() {
     autoSlideInterval = setInterval(() => {
         changeSlide(1);
-    }, 5000); // Change slide every 5 seconds
+    }, 8000); // Change slide every 8 seconds
 }
 
 function stopAutoSlide() {
