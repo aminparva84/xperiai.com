@@ -1,0 +1,38 @@
+{
+  "free_online_textbooks": [
+    {
+      "name": "American Government 3e",
+      "url": "https://openstax.org/details/books/american-government-3e",
+      "description": "Free comprehensive textbook on American Government"
+    },
+    {
+      "name": "Constitutional Law Textbook",
+      "url": "https://www.law.cornell.edu/constitution",
+      "description": "Cornell Law School Constitutional Law Reference"
+    }
+  ],
+  "government_sources": [
+    {
+      "name": "National Archives Constitution",
+      "url": "https://www.archives.gov/founding-docs/constitution",
+      "description": "Official National Archives Constitution resources"
+    },
+    {
+      "name": "Library of Congress",
+      "url": "https://www.loc.gov/law/help/usconlaw/",
+      "description": "Library of Congress Constitutional Law resources"
+    }
+  ],
+  "educational_institutions": [
+    {
+      "name": "Yale Law School",
+      "url": "https://avalon.law.yale.edu/18th_century/constpap.asp",
+      "description": "Yale Law School Constitutional documents"
+    },
+    {
+      "name": "Harvard Law School",
+      "url": "https://hls.harvard.edu/",
+      "description": "Harvard Law School Constitutional resources"
+    }
+  ]
+}

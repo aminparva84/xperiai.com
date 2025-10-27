@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constitution Expert AI - US Constitution & Amendments</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #2c5aa0 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 900px;
+            height: 85vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2c5aa0 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .chat-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .chat-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .constitution-icon {
+            font-size: 28px;
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.ai {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2c5aa0 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.ai .message-content {
+            background: white;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2c5aa0 100%);
+            color: white;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #1e3a8a;
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2c5aa0 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            margin-bottom: 15px;
+            max-width: 75%;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #9ca3af;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #6b7280;
+            margin: 40px 0;
+        }
+
+        .welcome-message h3 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .welcome-message p {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .quick-questions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .quick-question {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .quick-question:hover {
+            background: #e2e8f0;
+            border-color: #1e3a8a;
+        }
+
+        .constitution-highlight {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+
+        /* Scrollbar styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 95%;
+                height: 90vh;
+                border-radius: 15px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+            
+            .chat-header h1 {
+                font-size: 20px;
+            }
+            
+            .quick-questions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="status-indicator" id="statusIndicator"></div>
+            <h1>
+                <span class="constitution-icon">🇺🇸</span>
+                Legal Expert AI
+            </h1>
+            <p>Your specialized AI assistant for US Constitution, Constitutional Law, and California Criminal Law</p>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <h3>🇺🇸 Welcome to Legal Expert AI!</h3>
+                <p>I'm your specialized AI assistant for the US Constitution, Constitutional Law, and California Criminal Law. I can ONLY answer questions about these legal topics. If you ask about other subjects, I'll politely let you know that I can only help with constitutional and legal matters.</p>
+                
+                <div class="quick-questions">
+                    <div class="quick-question" onclick="askQuestion('What does the First Amendment say?')">First Amendment</div>
+                    <div class="quick-question" onclick="askQuestion('Explain the 14th Amendment')">14th Amendment</div>
+                    <div class="quick-question" onclick="askQuestion('What is the Commerce Clause?')">Commerce Clause</div>
+                    <div class="quick-question" onclick="askQuestion('What are the Bill of Rights?')">Bill of Rights</div>
+                    <div class="quick-question" onclick="askQuestion('Explain California criminal law procedures')">CA Criminal Law</div>
+                    <div class="quick-question" onclick="askQuestion('What is due process?')">Due Process</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Ask about the Constitution, Amendments, or Constitutional Law..." autocomplete="off">
+                <button id="sendButton" class="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ConstitutionChat {
+            constructor() {
+                this.chatMessages = document.getElementById('chatMessages');
+                this.chatInput = document.getElementById('chatInput');
+                this.sendButton = document.getElementById('sendButton');
+                this.typingIndicator = document.getElementById('typingIndicator');
+                this.statusIndicator = document.getElementById('statusIndicator');
+                this.conversationHistory = [];
+                this.conversationId = 'constitution_chat_' + Date.now();
+                
+                this.initializeEventListeners();
+                this.checkChatHealth();
+            }
+            
+            initializeEventListeners() {
+                this.sendButton.addEventListener('click', () => this.sendMessage());
+                this.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+            }
+            
+            async checkChatHealth() {
+                try {
+                    const response = await fetch('/chat/health');
+                    const data = await response.json();
+                    
+                    if (data.bedrock_available) {
+                        this.statusIndicator.style.background = '#4ade80';
+                    } else {
+                        this.statusIndicator.style.background = '#f59e0b';
+                    }
+                } catch (error) {
+                    this.statusIndicator.style.background = '#ef4444';
+                }
+            }
+            
+            async sendMessage() {
+                const message = this.chatInput.value.trim();
+                if (!message) return;
+                
+                this.addMessage(message, 'user');
+                this.chatInput.value = '';
+                this.sendButton.disabled = true;
+                
+                this.showTypingIndicator();
+                
+                try {
+                    const response = await fetch('/chat/send', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            conversation_id: this.conversationId,
+                            history: this.conversationHistory,
+                            agent_type: 'constitution'
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        this.addMessage(data.ai_response, 'ai');
+                        
+                        this.conversationHistory.push(
+                            { sender: 'user', message: message },
+                            { sender: 'ai', message: data.ai_response }
+                        );
+                    } else {
+                        this.addMessage('Sorry, I encountered an error. Please try again.', 'ai');
+                    }
+                } catch (error) {
+                    this.addMessage('Sorry, I\'m having trouble connecting. Please check your internet connection and try again.', 'ai');
+                } finally {
+                    this.hideTypingIndicator();
+                    this.sendButton.disabled = false;
+                    this.chatInput.focus();
+                }
+            }
+            
+            addMessage(content, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const avatar = document.createElement('div');
+                avatar.className = 'message-avatar';
+                avatar.textContent = sender === 'user' ? 'U' : '🇺🇸';
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+                
+                // Add Constitution highlighting for AI responses
+                if (sender === 'ai') {
+                    messageContent.innerHTML = this.highlightConstitutionTerms(content);
+                } else {
+                    messageContent.textContent = content;
+                }
+                
+                if (sender === 'user') {
+                    messageDiv.appendChild(messageContent);
+                    messageDiv.appendChild(avatar);
+                } else {
+                    messageDiv.appendChild(avatar);
+                    messageDiv.appendChild(messageContent);
+                }
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.scrollToBottom();
+            }
+            
+            highlightConstitutionTerms(text) {
+                // Highlight important Constitutional terms
+                const terms = [
+                    'Constitution', 'Amendment', 'Bill of Rights', 'First Amendment', 'Second Amendment',
+                    'Fourteenth Amendment', 'Due Process', 'Equal Protection', 'Commerce Clause',
+                    'Supremacy Clause', 'Necessary and Proper Clause', 'Federalism', 'Separation of Powers',
+                    'Checks and Balances', 'Article I', 'Article II', 'Article III', 'Article IV', 'Article V'
+                ];
+                
+                let highlightedText = text;
+                terms.forEach(term => {
+                    const regex = new RegExp(`\\b${term}\\b`, 'gi');
+                    highlightedText = highlightedText.replace(regex, `<span class="constitution-highlight">${term}</span>`);
+                });
+                
+                return highlightedText;
+            }
+            
+            showTypingIndicator() {
+                this.typingIndicator.style.display = 'block';
+                this.scrollToBottom();
+            }
+            
+            hideTypingIndicator() {
+                this.typingIndicator.style.display = 'none';
+            }
+            
+            scrollToBottom() {
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+        }
+        
+        // Quick question function
+        function askQuestion(question) {
+            document.getElementById('chatInput').value = question;
+            document.getElementById('sendButton').click();
+        }
+        
+        // Initialize chat when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ConstitutionChat();
+        });
+    </script>
+</body>
+</html>

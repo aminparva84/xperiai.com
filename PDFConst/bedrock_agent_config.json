@@ -1,0 +1,72 @@
+{
+  "agent": {
+    "agentName": "ConstitutionExpert",
+    "description": "AI Agent specialized in US Constitution, Amendments, and Constitutional Law",
+    "foundationModel": "anthropic.claude-3-sonnet-20240229-v1:0",
+    "instruction": "You are a Constitutional Law Expert AI Assistant specializing in the US Constitution, Amendments, and Constitutional Law.\n\nYour expertise includes:\n- US Constitution (all articles and sections)\n- Bill of Rights (Amendments 1-10)\n- All Constitutional Amendments (11-27)\n- Constitutional history and context\n- Constitutional interpretation\n- Federalist Papers\n- Constitutional Convention notes\n- Supreme Court decisions related to Constitutional issues\n\nGuidelines:\n1. Provide accurate, well-sourced information from official documents\n2. Explain complex Constitutional concepts in clear, understandable terms\n3. Cite specific Articles, Sections, and Amendments when relevant\n4. Provide historical context for Constitutional provisions\n5. Explain how Constitutional principles apply to modern situations\n6. Be objective and non-partisan in your explanations\n7. If unsure about a specific interpretation, acknowledge the complexity\n8. Always prioritize the actual text of the Constitution and Amendments\n\nYou should only answer questions related to:\n- US Constitution and its interpretation\n- Constitutional Amendments\n- Constitutional Law\n- Constitutional History\n- Related legal principles and precedents\n\nFor questions outside Constitutional Law, politely redirect to Constitutional topics.",
+    "idleSessionTTLInSeconds": 1800,
+    "agentResourceRoleArn": "arn:aws:iam::047719663270:role/BedrockAgentRole"
+  },
+  "knowledge_base": {
+    "name": "ConstitutionKnowledgeBase",
+    "description": "Knowledge base containing US Constitution, Amendments, and related documents",
+    "roleArn": "arn:aws:iam::047719663270:role/BedrockKnowledgeBaseRole",
+    "storageConfiguration": {
+      "type": "OPENSEARCH_SERVERLESS",
+      "opensearchServerlessConfiguration": {
+        "collectionArn": "arn:aws:aoss:us-east-1:047719663270:collection/constitution-collection",
+        "vectorIndexName": "constitution-vector-index",
+        "fieldMapping": {
+          "vectorField": "vector",
+          "textField": "text",
+          "metadataField": "metadata"
+        }
+      }
+    }
+  },
+  "data_source": {
+    "name": "ConstitutionPDFs",
+    "description": "Data source containing Constitution and Amendments PDF documents",
+    "dataSourceConfiguration": {
+      "s3Configuration": {
+        "bucketArn": "arn:aws:s3:::constitution-documents-bucket",
+        "inclusionPrefixes": [
+          "constitution/",
+          "amendments/",
+          "federalist-papers/"
+        ],
+        "exclusionPrefixes": [
+          "temp/",
+          "draft/"
+        ]
+      }
+    },
+    "vectorIngestionConfiguration": {
+      "chunkingConfiguration": {
+        "chunkingStrategy": "FIXED_SIZE",
+        "fixedSizeChunkingConfiguration": {
+          "maxTokens": 1000,
+          "overlapPercentage": 20
+        }
+      }
+    }
+  },
+  "setup_instructions": {
+    "step_1": "Upload Constitution PDFs to S3 bucket: constitution-documents-bucket",
+    "step_2": "Create IAM roles for Bedrock Agent and Knowledge Base",
+    "step_3": "Set up OpenSearch Serverless collection",
+    "step_4": "Create and configure the agent",
+    "step_5": "Test the agent with Constitution questions"
+  },
+  "required_iam_roles": [
+    "BedrockAgentRole",
+    "BedrockKnowledgeBaseRole",
+    "BedrockDataSourceRole"
+  ],
+  "required_s3_buckets": [
+    "constitution-documents-bucket"
+  ],
+  "required_opensearch": [
+    "constitution-collection"
+  ]
+}

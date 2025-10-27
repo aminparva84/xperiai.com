@@ -7,6 +7,17 @@ import os
 import json
 import re
 import html
+import requests
+import boto3
+
+# AWS credentials should be set via environment variables or AWS credentials file
+# For local development, ensure AWS credentials are configured via:
+# - AWS CLI: aws configure
+# - Environment variables
+# - IAM role (if running on EC2)
+if not os.environ.get('AWS_ACCESS_KEY_ID'):
+    print("⚠️  Warning: AWS credentials not found in environment variables")
+    print("   Please configure AWS credentials via AWS CLI or environment variables")
 
 app = Flask(__name__)
 CORS(app)
@@ -21,6 +32,77 @@ try:
         contact_submissions = json.load(f)
 except FileNotFoundError:
     contact_submissions = []
+
+# Lambda API configuration
+LAMBDA_API_URL = None
+
+def load_lambda_config():
+    """Load Lambda API configuration"""
+    global LAMBDA_API_URL
+    try:
+        with open('lambda_agent_config.json', 'r') as f:
+            config = json.load(f)
+            LAMBDA_API_URL = config['chat_endpoint']
+            print(f"✅ Lambda API URL loaded: {LAMBDA_API_URL}")
+            return True
+    except FileNotFoundError:
+        print("❌ Lambda configuration not found. Please run: python deploy_lambda_agent.py")
+        return False
+    except Exception as e:
+        print(f"❌ Error loading Lambda config: {e}")
+        return False
+
+# Load configuration immediately
+load_lambda_config()
+
+def load_constitution_context():
+    """Load Constitution context from PDFs"""
+    try:
+        with open('PDFConst/constitution_context.txt', 'r', encoding='utf-8') as f:
+            context = f.read()
+            # Truncate context to fit model limits (keep first 30000 characters)
+            if len(context) > 30000:
+                context = context[:30000] + "\n\n[Context truncated for model limits]"
+            return context
+    except FileNotFoundError:
+        print("Constitution context not found. Please run: python constitution_pdf_reader.py")
+        return ""
+    except Exception as e:
+        print(f"Error loading Constitution context: {e}")
+        return ""
+
+def get_ai_response(user_message, conversation_history=None, agent_type="general"):
+    """Get AI response by invoking Lambda directly"""
+    try:
+        # Initialize Lambda client
+        lambda_client = boto3.client('lambda', region_name='us-east-1')
+        
+        # Prepare request payload
+        payload = {
+            "message": user_message,
+            "agent_type": agent_type,
+            "history": conversation_history or []
+        }
+        
+        # Call Lambda function directly
+        response = lambda_client.invoke(
+            FunctionName='BedrockConstitutionAgent',
+            Payload=json.dumps(payload)
+        )
+        
+        # Parse response
+        result = json.loads(response['Payload'].read())
+        
+        if result.get('statusCode') == 200:
+            body = json.loads(result['body'])
+            return body.get('ai_response', 'No response received')
+        else:
+            print(f"Lambda error: {result}")
+            return "I apologize, but I'm having trouble processing your request right now. Please try again in a moment."
+        
+    except Exception as e:
+        print(f"Error calling Lambda function: {e}")
+        return "I apologize, but I'm having trouble processing your request right now. Please try again in a moment."
 
 # Rate limiting
 limiter = Limiter(
@@ -310,10 +392,66 @@ def admin_dashboard():
     </html>
     ''', submissions=contact_submissions)
 
+# Chat route
+@app.route('/chat')
+def chat_page():
+    """Serve the Constitution chat interface"""
+    with open('constitution_chat.html', 'r', encoding='utf-8') as f:
+        return f.read()
+
+@app.route('/chat/send', methods=['POST'])
+@limiter.limit("10 per minute")
+def send_message():
+    """Handle chat messages"""
+    try:
+        data = request.get_json()
+        user_message = data.get('message', '').strip()
+        conversation_id = data.get('conversation_id', 'default')
+        agent_type = data.get('agent_type', 'general')
+        
+        if not user_message:
+            return jsonify({'error': 'Message cannot be empty'}), 400
+        
+        # Get conversation history
+        conversation_history = data.get('history', [])
+        
+        # Get AI response with agent type
+        ai_response = get_ai_response(user_message, conversation_history, agent_type)
+        
+        # Prepare response
+        response_data = {
+            'user_message': user_message,
+            'ai_response': ai_response,
+            'timestamp': datetime.now().isoformat(),
+            'conversation_id': conversation_id,
+            'agent_type': agent_type
+        }
+        
+        return jsonify(response_data)
+        
+    except Exception as e:
+        return jsonify({'error': f'Server error: {str(e)}'}), 500
+
+@app.route('/chat/health', methods=['GET'])
+def chat_health():
+    """Health check for chat service"""
+    return jsonify({
+        'status': 'healthy',
+        'lambda_api_available': LAMBDA_API_URL is not None,
+        'timestamp': datetime.now().isoformat()
+    })
+
 if __name__ == '__main__':
+    # Initialize Lambda API
+    if load_lambda_config():
+        print("✅ Lambda API initialized successfully")
+    else:
+        print("❌ Failed to initialize Lambda API")
+    
     print("Starting Xperi AI Flask Server...")
     print("Contact form submissions will be stored securely!")
     print("Admin dashboard: http://localhost:5000/admin")
     print("Admin password: XperiAI2024!")
+    print("Chat interface: http://localhost:5000/chat")
     print("Server running on http://localhost:5000")
     app.run(debug=True, host='0.0.0.0', port=5000)

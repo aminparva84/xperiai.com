@@ -802,6 +802,19 @@
         </div>
     </footer>
 
+    <!-- Floating Chat Button -->
+    <div id="chatButton" class="chat-button" onclick="openChat()">
+        <i class="fas fa-comments"></i>
+        <span>AI Chat</span>
+    </div>
+
     <script src="src/js/script.js"></script>
+    
+    <script>
+        // Chat functionality
+        function openChat() {
+            window.open('/chat', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+        }
+    </script>
 </body>
 </html>
