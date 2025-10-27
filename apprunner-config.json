@@ -1,0 +1,24 @@
+{
+  "ServiceName": "xperiai-app",
+  "SourceConfiguration": {
+    "AuthenticationConfiguration": {
+      "AccessRoleArn": "arn:aws:iam::047719663270:role/AppRunnerXperiaiRole"
+    },
+    "ImageRepository": {
+      "ImageIdentifier": "047719663270.dkr.ecr.us-east-1.amazonaws.com/xperiai-app:latest",
+      "ImageConfiguration": {
+        "Port": "8000",
+        "RuntimeEnvironmentVariables": {
+          "AWS_DEFAULT_REGION": "us-east-1"
+        }
+      },
+      "ImageRepositoryType": "ECR"
+    },
+    "AutoDeploymentsEnabled": true
+  },
+  "InstanceConfiguration": {
+    "Cpu": "0.25 vCPU",
+    "Memory": "0.5 GB",
+    "InstanceRoleArn": "arn:aws:iam::047719663270:role/AppRunnerXperiaiRole"
+  }
+}

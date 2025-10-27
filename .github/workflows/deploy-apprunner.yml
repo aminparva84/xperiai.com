@@ -1,0 +1,64 @@
+name: Deploy to AWS App Runner
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: xperiai-app
+  SERVICE_NAME: xperiai-app
+  ACCOUNT_ID: 047719663270
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: latest
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+    - name: Force new deployment
+      env:
+        IMAGE_URI: ${{ steps.build-image.outputs.image }}
+        SERVICE_ARN: arn:aws:apprunner:${{ env.AWS_REGION }}:${{ env.ACCOUNT_ID }}:service/${{ env.SERVICE_NAME }}
+      run: |
+        echo "Image pushed: $IMAGE_URI"
+        echo "Service ARN: $SERVICE_ARN"
+        echo ""
+        echo "App Runner will automatically detect the new image and deploy"
+        echo "since auto-deploy is enabled."
+
+    - name: Check deployment status
+      run: |
+        echo "Waiting for App Runner to pull new image..."
+        sleep 30
+        aws apprunner describe-service \
+          --service-arn arn:aws:apprunner:${{ env.AWS_REGION }}:${{ env.ACCOUNT_ID }}:service/${{ env.SERVICE_NAME }} \
+          --region ${{ env.AWS_REGION }} \
+          --query 'Service.[Status,ServiceUrl]' \
+          --output table
+
