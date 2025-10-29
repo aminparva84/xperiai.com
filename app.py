@@ -10,14 +10,8 @@ import html
 import requests
 import boto3
 
-# AWS credentials should be set via environment variables or AWS credentials file
-# For local development, ensure AWS credentials are configured via:
-# - AWS CLI: aws configure
-# - Environment variables
-# - IAM role (if running on EC2)
-if not os.environ.get('AWS_ACCESS_KEY_ID'):
-    print("⚠️  Warning: AWS credentials not found in environment variables")
-    print("   Please configure AWS credentials via AWS CLI or environment variables")
+# AWS configuration
+os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 
 app = Flask(__name__)
 CORS(app)
@@ -43,13 +37,13 @@ def load_lambda_config():
         with open('lambda_agent_config.json', 'r') as f:
             config = json.load(f)
             LAMBDA_API_URL = config['chat_endpoint']
-            print(f"✅ Lambda API URL loaded: {LAMBDA_API_URL}")
+            print(f"Lambda API URL loaded: {LAMBDA_API_URL}")
             return True
     except FileNotFoundError:
-        print("❌ Lambda configuration not found. Please run: python deploy_lambda_agent.py")
+        print("Lambda configuration not found. Please run: python deploy_lambda_agent.py")
         return False
     except Exception as e:
-        print(f"❌ Error loading Lambda config: {e}")
+        print(f"Error loading Lambda config: {e}")
         return False
 
 # Load configuration immediately
@@ -424,7 +418,8 @@ def send_message():
             'ai_response': ai_response,
             'timestamp': datetime.now().isoformat(),
             'conversation_id': conversation_id,
-            'agent_type': agent_type
+            'agent_type': agent_type,
+            'is_html': True  # Indicate that the response contains HTML
         }
         
         return jsonify(response_data)
@@ -444,9 +439,9 @@ def chat_health():
 if __name__ == '__main__':
     # Initialize Lambda API
     if load_lambda_config():
-        print("✅ Lambda API initialized successfully")
+        print("Lambda API initialized successfully")
     else:
-        print("❌ Failed to initialize Lambda API")
+        print("Failed to initialize Lambda API")
     
     print("Starting Xperi AI Flask Server...")
     print("Contact form submissions will be stored securely!")

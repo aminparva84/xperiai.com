@@ -456,9 +456,16 @@
                 const messageContent = document.createElement('div');
                 messageContent.className = 'message-content';
                 
-                // Add Constitution highlighting for AI responses
+                // Handle AI responses - check if it's HTML or plain text
                 if (sender === 'ai') {
-                    messageContent.innerHTML = this.highlightConstitutionTerms(content);
+                    // Check if the response contains HTML tags
+                    if (content.includes('<div') || content.includes('<span') || content.includes('<p>')) {
+                        // It's already HTML formatted, use it directly
+                        messageContent.innerHTML = content;
+                    } else {
+                        // Apply Constitution highlighting for plain text responses
+                        messageContent.innerHTML = this.highlightConstitutionTerms(content);
+                    }
                 } else {
                     messageContent.textContent = content;
                 }
