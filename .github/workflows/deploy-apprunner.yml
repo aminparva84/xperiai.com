@@ -1,4 +1,4 @@
-name: Deploy to AWS App Runner
+name: Deploy Xperi AI to AWS App Runner
 
 on:
   push:
@@ -10,6 +10,7 @@ env:
   ECR_REPOSITORY: xperiai-app
   SERVICE_NAME: xperiai-app
   ACCOUNT_ID: 047719663270
+  IMAGE_TAG: ${{ github.sha }}
 
 jobs:
   deploy:
@@ -27,6 +28,11 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
+    - name: Create ECR repository if it doesn't exist
+      run: |
+        aws ecr describe-repositories --repository-names ${{ env.ECR_REPOSITORY }} --region ${{ env.AWS_REGION }} || \
+        aws ecr create-repository --repository-name ${{ env.ECR_REPOSITORY }} --region ${{ env.AWS_REGION }} --image-scanning-configuration scanOnPush=true
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
@@ -35,11 +41,17 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: latest
+        IMAGE_TAG: ${{ env.IMAGE_TAG }}
       run: |
+        echo "Building Docker image..."
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        echo "Tagging as latest..."
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        echo "Pushing image to ECR..."
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        echo "latest_image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
 
     - name: Force new deployment
       env:
