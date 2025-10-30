@@ -16,6 +16,9 @@ jobs:
   deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     
     steps:
     - name: Checkout code
@@ -28,10 +31,17 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Create ECR repository if it doesn't exist
+    - name: Verify AWS credentials
       run: |
-        aws ecr describe-repositories --repository-names ${{ env.ECR_REPOSITORY }} --region ${{ env.AWS_REGION }} || \
-        aws ecr create-repository --repository-name ${{ env.ECR_REPOSITORY }} --region ${{ env.AWS_REGION }} --image-scanning-configuration scanOnPush=true
+        echo "Verifying AWS credentials..."
+        aws sts get-caller-identity
+        echo "AWS credentials verified successfully"
+
+    - name: Create ECR repository if it doesn't exist
+      continue-on-error: true
+      run: |
+        echo "Checking if ECR repository exists..."
+        aws ecr describe-repositories --repository-names ${{ env.ECR_REPOSITORY }} --region ${{ env.AWS_REGION }} 2>&1 || aws ecr create-repository --repository-name ${{ env.ECR_REPOSITORY }} --region ${{ env.AWS_REGION }} --image-scanning-configuration scanOnPush=true
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -43,34 +53,31 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ env.IMAGE_TAG }}
       run: |
+        echo "ECR Registry: $ECR_REGISTRY"
+        echo "Image Tag: $IMAGE_TAG"
+        echo "Repository: ${{ env.ECR_REPOSITORY }}"
+        echo ""
         echo "Building Docker image..."
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG .
         echo "Tagging as latest..."
-        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker tag $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
         echo "Pushing image to ECR..."
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-        echo "latest_image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
+        docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+        docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest
+        echo "image=$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        echo "latest_image=$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:latest" >> $GITHUB_OUTPUT
 
-    - name: Force new deployment
+    - name: Deployment summary
       env:
         IMAGE_URI: ${{ steps.build-image.outputs.image }}
         SERVICE_ARN: arn:aws:apprunner:${{ env.AWS_REGION }}:${{ env.ACCOUNT_ID }}:service/${{ env.SERVICE_NAME }}
       run: |
-        echo "Image pushed: $IMAGE_URI"
+        echo "=========================================="
+        echo "Deployment Summary"
+        echo "=========================================="
+        echo "Image URI: $IMAGE_URI"
         echo "Service ARN: $SERVICE_ARN"
         echo ""
         echo "App Runner will automatically detect the new image and deploy"
         echo "since auto-deploy is enabled."
-
-    - name: Check deployment status
-      run: |
-        echo "Waiting for App Runner to pull new image..."
-        sleep 30
-        aws apprunner describe-service \
-          --service-arn arn:aws:apprunner:${{ env.AWS_REGION }}:${{ env.ACCOUNT_ID }}:service/${{ env.SERVICE_NAME }} \
-          --region ${{ env.AWS_REGION }} \
-          --query 'Service.[Status,ServiceUrl]' \
-          --output table
-
+        echo "This typically takes 5-10 minutes."
